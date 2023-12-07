@@ -30,7 +30,7 @@ class DiscordEmbed():
     class Colors(int, Enum):
         """Main Color Enum, used in Discord embeds"""
 
-        # If you havent noticed already, yes this is literally
+        # If you havent noticed already, yes this is just
         # getbootstrap.com's button color scheme, lmfao
 
         PRIMARY = int(0x0069d9)
