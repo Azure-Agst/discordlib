@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import logging
 import requests
 from enum import Enum
 from typing import List
@@ -30,7 +31,7 @@ class DiscordEmbed():
     class Colors(int, Enum):
         """Main Color Enum, used in Discord embeds"""
 
-        # If you havent noticed already, yes this is just
+        # If you havent noticed already, yes this is literally
         # getbootstrap.com's button color scheme, lmfao
 
         PRIMARY = int(0x0069d9)
@@ -49,7 +50,8 @@ class DiscordEmbed():
             image: str = None,
             color: int = Colors.PRIMARY,
             timestamp: str = "",
-            footer: str = ""
+            footer: str = "",
+            url: str = ""
             ):
 
         self.title = title
@@ -58,6 +60,7 @@ class DiscordEmbed():
         self.color = color
         self.timestamp = timestamp
         self.footer = footer
+        self.url = url
 
     def __repr__(self):
         return f"DiscordEmbed(title='{self.title}')"
@@ -70,13 +73,14 @@ class DiscordEmbed():
         timestamp = data['timestamp'] if 'timestamp' in data.keys() else ""
         footer = data['footer']['text'] if 'footer' in data.keys() else None
 
-        return DiscordMessage(
+        return DiscordEmbed(
             title=data["title"],
             description=data["description"],
             color=data["color"],
             image=image,
             timestamp=timestamp,
-            footer=footer
+            footer=footer,
+            url=data["url"]
         )
 
     def to_dict(self):
@@ -86,7 +90,8 @@ class DiscordEmbed():
             "title": self.title,
             "description": self.description,
             "color": self.color,
-            "timestamp": self.timestamp
+            "timestamp": self.timestamp,
+            "url": self.url
         }
 
         if self.image:
@@ -210,7 +215,7 @@ class DiscordWebhook():
         """Rich Discord Message Function"""
 
         if message.content == "":
-            print("Cannot send empty webhook!")
+            logging.error("Cannot send empty webhook!")
             return
 
         json = message.to_dict()
@@ -258,5 +263,5 @@ class DiscordWebhook():
 
 # Disclaimer for accidental invocations
 if __name__ == "__main__":
-    print("This file is intended to be a library, not executed.")
+    logging.error("This file is intended to be a library, not executed.")
     exit(0)
